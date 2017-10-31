@@ -34,6 +34,11 @@ public class BarEntry extends Entry {
     private float mPositiveSum;
 
     /**
+     * the color of bar
+     */
+    private int barColor;
+
+    /**
      * Constructor for normal bars (not stacked).
      *
      * @param x
@@ -41,6 +46,12 @@ public class BarEntry extends Entry {
      */
     public BarEntry(float x, float y) {
         super(x, y);
+    }
+
+
+    public BarEntry(float x, float y, int barColor) {
+        super(x, y);
+        this.barColor = barColor;
     }
 
     /**
@@ -195,6 +206,14 @@ public class BarEntry extends Entry {
      */
     public boolean isStacked() {
         return mYVals != null;
+    }
+
+    public int getBarColor() {
+        return barColor;
+    }
+
+    public void setBarColor(int barColor) {
+        this.barColor = barColor;
     }
 
     /**

@@ -11,13 +11,20 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
     protected boolean mContainsStacks = false;
     protected boolean mInverted = false;
 
-    /** width of the bar on the x-axis, in values (not pixels) */
+    /**
+     * width of the bar on the x-axis, in values (not pixels)
+     */
     protected float mBarWidth = 1f;
+
+    protected int[] barColors;
+
+    protected boolean hasCustomColor;
 
     public BarBuffer(int size, int dataSetCount, boolean containsStacks) {
         super(size);
         this.mDataSetCount = dataSetCount;
         this.mContainsStacks = containsStacks;
+        this.barColors = new int[size];
     }
 
     public void setBarWidth(float barWidth) {
@@ -40,6 +47,14 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
         buffer[index++] = bottom;
     }
 
+    public int getBarColor(int index) {
+        return barColors[index];
+    }
+
+    public boolean hasCustomColor(){
+        return hasCustomColor;
+    }
+
     @Override
     public void feed(IBarDataSet data) {
 
@@ -50,8 +65,10 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
 
             BarEntry e = data.getEntryForIndex(i);
 
-            if(e == null)
+            if (e == null)
                 continue;
+            if (!hasCustomColor && e.getBarColor() != 0) hasCustomColor = true;
+            barColors[i] = e.getBarColor();
 
             float x = e.getX();
             float y = e.getY();

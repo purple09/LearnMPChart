@@ -3,6 +3,7 @@ package com.github.mikephil.charting.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
@@ -143,7 +144,6 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                 }
 
                 mRenderPaint.setStyle(Paint.Style.STROKE);
-
                 c.drawLines(mShadowBuffers, mRenderPaint);
 
                 // calculate the body
@@ -315,8 +315,8 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                         Utils.drawImage(
                                 c,
                                 icon,
-                                (int)(x + iconsOffset.x),
-                                (int)(y + iconsOffset.y),
+                                (int) (x + iconsOffset.x),
+                                (int) (y + iconsOffset.y),
                                 icon.getIntrinsicWidth(),
                                 icon.getIntrinsicHeight());
                     }
@@ -359,5 +359,52 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
             // draw the lines
             drawHighlightLines(c, (float) pix.x, (float) pix.y, set);
         }
+    }
+
+    @Override
+    public void drawMaxMinLine(Canvas c) {
+        float phaseY = mAnimator.getPhaseY();
+        List<ICandleDataSet> dataSets = mChart.getCandleData().getDataSets();
+        for (ICandleDataSet dataSet : dataSets) {
+            if (!dataSet.isDrawMaxMinLine())
+                continue;
+            Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
+            float yOffset = Utils.convertDpToPixel(5f);
+            Rect rect = c.getClipBounds();
+            int middleXPixel = (rect.left + rect.right) / 2;
+
+            String maxText;
+            boolean maxLeft;
+
+            float[] max = {dataSet.getYMaxXIndex(), dataSet.getYMax() * phaseY};
+            trans.pointValuesToPixel(max);
+            maxText = String.valueOf(dataSet.getYMax());
+            if (max[0] > middleXPixel) {
+                maxText = maxText + "......";
+                maxLeft = false;
+            } else {
+                maxText = "......" + maxText;
+                maxLeft = true;
+            }
+            max[1] -= yOffset;
+            drawMaxMinLine(c, maxText, max[0], max[1], maxLeft);
+
+            String minText;
+            boolean minLeft;
+            float[] min = {dataSet.getYMinXIndex(), dataSet.getYMin() * phaseY};
+            trans.pointValuesToPixel(min);
+            minText = String.valueOf(dataSet.getYMin());
+            if (min[0] > middleXPixel) {
+                minText = minText + "......";
+                minLeft = false;
+            } else {
+                minText = "......" + minText;
+                minLeft = true;
+            }
+            min[1] += yOffset;
+            min[1] += Utils.calcTextHeight(getPaintMaxMinLine(), minText);
+            drawMaxMinLine(c, minText, min[0], min[1], minLeft);
+        }
+
     }
 }

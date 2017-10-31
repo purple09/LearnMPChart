@@ -6,6 +6,7 @@ import android.graphics.DashPathEffect;
 import android.util.Log;
 
 import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisColorFormatter;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
@@ -23,6 +24,8 @@ public abstract class AxisBase extends ComponentBase {
      * custom formatter that is used instead of the auto-formatter if set
      */
     protected IAxisValueFormatter mAxisValueFormatter;
+
+    protected IAxisColorFormatter mAxisColorFormatter;
 
     private int mGridColor = Color.GRAY;
 
@@ -146,6 +149,8 @@ public abstract class AxisBase extends ComponentBase {
      * the total range of values this axis covers
      */
     public float mAxisRange = 0f;
+
+    protected float[] mCustomPositions;
 
     /**
      * default constructor
@@ -762,5 +767,29 @@ public abstract class AxisBase extends ComponentBase {
     public void setSpaceMax(float mSpaceMax)
     {
         this.mSpaceMax = mSpaceMax;
+    }
+
+    public float[] getCustomPositions() {
+        return mCustomPositions;
+    }
+
+    public void setCustomPositions(float[] mCustomPositions) {
+        this.mCustomPositions = mCustomPositions;
+    }
+
+    public IAxisColorFormatter getAxisColorFormatter() {
+        return mAxisColorFormatter;
+    }
+
+    public void setAxisColorFormatter(IAxisColorFormatter mAxisColorFormatter) {
+        this.mAxisColorFormatter = mAxisColorFormatter;
+    }
+
+    public int getLabelColor(int index) {
+
+        if (getAxisColorFormatter()==null||index < 0 || index >= mEntries.length)
+            return 0;
+        else
+            return getAxisColorFormatter().getLableColor(mEntries[index], this);
     }
 }

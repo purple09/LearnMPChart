@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
-import android.graphics.drawable.Drawable;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.data.Entry;
@@ -14,7 +13,6 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.ChartInterface;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
-import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
@@ -48,6 +46,8 @@ public abstract class DataRenderer extends Renderer {
      */
     protected Paint mValuePaint;
 
+    protected Paint mMaxMinLinePaint;
+
     public DataRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(viewPortHandler);
         this.mAnimator = animator;
@@ -61,6 +61,10 @@ public abstract class DataRenderer extends Renderer {
         mValuePaint.setColor(Color.rgb(63, 63, 63));
         mValuePaint.setTextAlign(Align.CENTER);
         mValuePaint.setTextSize(Utils.convertDpToPixel(9f));
+
+        mMaxMinLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mMaxMinLinePaint.setColor(Color.rgb(63, 63, 63));
+        mMaxMinLinePaint.setTextSize(Utils.convertDpToPixel(9f));
 
         mHighlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mHighlightPaint.setStyle(Paint.Style.STROKE);
@@ -82,6 +86,11 @@ public abstract class DataRenderer extends Renderer {
     public Paint getPaintValues() {
         return mValuePaint;
     }
+
+    public Paint getPaintMaxMinLine() {
+        return mMaxMinLinePaint;
+    }
+
 
     /**
      * Returns the Paint object this renderer uses for drawing highlight
@@ -152,6 +161,11 @@ public abstract class DataRenderer extends Renderer {
         c.drawText(formatter.getFormattedValue(value, entry, dataSetIndex, mViewPortHandler), x, y, mValuePaint);
     }
 
+    public void drawMaxMinLine(Canvas c, String text, float x, float y, boolean left) {
+        mMaxMinLinePaint.setTextAlign(left ? Align.LEFT : Align.RIGHT);
+        c.drawText(text, x, y, mMaxMinLinePaint);
+    }
+
     /**
      * Draws any kind of additional information (e.g. line-circles).
      *
@@ -166,4 +180,6 @@ public abstract class DataRenderer extends Renderer {
      * @param indices the highlighted values
      */
     public abstract void drawHighlighted(Canvas c, Highlight[] indices);
+
+    public abstract void drawMaxMinLine(Canvas c);
 }

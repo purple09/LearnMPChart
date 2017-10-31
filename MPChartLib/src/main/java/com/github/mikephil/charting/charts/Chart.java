@@ -79,6 +79,11 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected T mData = null;
 
     /**
+     * highLight 的触发模式{@link com.github.mikephil.charting.data.HighLightMode}
+     */
+    protected int mHighLightMode = 0;
+
+    /**
      * Flag that indicates if highlighting per tap (touch) is enabled
      */
     protected boolean mHighLightPerTapEnabled = true;
@@ -396,7 +401,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     @Override
     protected void onDraw(Canvas canvas) {
         // super.onDraw(canvas);
-
         if (mData == null) {
 
             boolean hasText = !TextUtils.isEmpty(mNoDataText);
@@ -485,6 +489,14 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      */
     public Highlight[] getHighlighted() {
         return mIndicesToHighlight;
+    }
+
+    public void setHighLightMode(int mHighLightMode) {
+        this.mHighLightMode = mHighLightMode;
+    }
+
+    public int getmHighLightMode() {
+        return mHighLightMode;
     }
 
     /**
@@ -1651,7 +1663,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-
         for (int i = 0; i < getChildCount(); i++) {
             getChildAt(i).layout(left, top, right, bottom);
         }

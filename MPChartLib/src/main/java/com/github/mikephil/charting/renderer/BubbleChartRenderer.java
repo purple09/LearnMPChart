@@ -268,4 +268,9 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
             c.drawCircle(pointBuffer[0], pointBuffer[1], shapeHalf, mHighlightPaint);
         }
     }
+
+    @Override
+    public void drawMaxMinLine(Canvas c) {
+
+    }
 }

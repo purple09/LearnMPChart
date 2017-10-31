@@ -708,6 +708,11 @@ public class LineChartRenderer extends LineRadarRenderer {
         }
     }
 
+    @Override
+    public void drawMaxMinLine(Canvas c) {
+
+    }
+
     /**
      * Sets the Bitmap.Config to be used by this renderer.
      * Default: Bitmap.Config.ARGB_8888

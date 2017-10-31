@@ -2,7 +2,6 @@ package com.github.mikephil.charting.listener;
 
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -13,6 +12,7 @@ import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.data.BarLineScatterCandleBubbleData;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.HighLightMode;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
@@ -42,12 +42,12 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     /**
      * point where the touch action started
      */
-    private MPPointF mTouchStartPoint = MPPointF.getInstance(0,0);
+    private MPPointF mTouchStartPoint = MPPointF.getInstance(0, 0);
 
     /**
      * center between two pointers (fingers on the display)
      */
-    private MPPointF mTouchPointCenter = MPPointF.getInstance(0,0);
+    private MPPointF mTouchPointCenter = MPPointF.getInstance(0, 0);
 
     private float mSavedXDist = 1f;
     private float mSavedYDist = 1f;
@@ -61,8 +61,8 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     private VelocityTracker mVelocityTracker;
 
     private long mDecelerationLastTime = 0;
-    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0,0);
-    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0,0);
+    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0, 0);
+    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0, 0);
 
     /**
      * the distance of movement that will be counted as a drag
@@ -164,7 +164,6 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 break;
 
             case MotionEvent.ACTION_MOVE:
-
                 if (mTouchMode == DRAG) {
 
                     mChart.disableScroll();
@@ -215,11 +214,13 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
                     }
 
+                } else if (mTouchMode == HIGH_LIGHT) {
+                    if (mChart.isHighlightPerDragEnabled())
+                        performHighlightDrag(event);
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
-
                 final VelocityTracker velocityTracker = mVelocityTracker;
                 final int pointerId = event.getPointerId(0);
                 velocityTracker.computeCurrentVelocity(1000, Utils.getMaximumFlingVelocity());
@@ -312,7 +313,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
      *
      * @param event
      */
-    private void performDrag(MotionEvent event, float distanceX, float distanceY) {
+    public void performDrag(MotionEvent event, float distanceX, float distanceY) {
 
         mLastGesture = ChartGesture.DRAG;
 
@@ -342,7 +343,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
      *
      * @param event
      */
-    private void performZoom(MotionEvent event) {
+    public void performZoom(MotionEvent event) {
 
         if (event.getPointerCount() >= 2) { // two finger zoom
 
@@ -597,6 +598,12 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         mLastGesture = ChartGesture.LONG_PRESS;
 
+        if (mChart.getmHighLightMode() == HighLightMode.LONG_PRESSED) {
+            mTouchMode = HIGH_LIGHT;
+            Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
+            performHighlight(h, e);
+        }
+
         OnChartGestureListener l = mChart.getOnChartGestureListener();
 
         if (l != null) {
@@ -620,8 +627,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
             return false;
         }
 
-        Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
-        performHighlight(h, e);
+        if (mChart.getmHighLightMode() == HighLightMode.TAB) {
+            Highlight h = mChart.getHighlightByTouchPoint(e.getX(), e.getY());
+            performHighlight(h, e);
+        }
 
         return super.onSingleTapUp(e);
     }

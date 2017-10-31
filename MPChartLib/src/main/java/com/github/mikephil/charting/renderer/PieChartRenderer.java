@@ -949,6 +949,11 @@ public class PieChartRenderer extends DataRenderer {
         MPPointF.recycleInstance(center);
     }
 
+    @Override
+    public void drawMaxMinLine(Canvas c) {
+
+    }
+
     /**
      * This gives all pie-slices a rounded edge.
      *

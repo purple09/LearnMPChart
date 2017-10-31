@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.tv1).setOnClickListener(this);
+        findViewById(R.id.tv2).setOnClickListener(this);
     }
 
     @Override
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.tv1:
                 startActivity(new Intent(this, Chart1Activity.class));
+                break;
+            case R.id.tv2:
+                startActivity(new Intent(this, Chart2Activity.class));
                 break;
         }
     }

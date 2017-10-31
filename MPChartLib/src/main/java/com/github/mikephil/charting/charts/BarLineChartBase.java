@@ -231,6 +231,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mRenderer.drawData(canvas);
 
+        //TODO 规制最高最低线
+        mRenderer.drawMaxMinLine(canvas);
+
         // if highlighting is enabled
         if (valuesToHighlight())
             mRenderer.drawHighlighted(canvas, mIndicesToHighlight);
@@ -263,6 +266,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         } else {
             mRenderer.drawValues(canvas);
         }
+
 
         mLegendRenderer.renderLegend(canvas);
 
@@ -560,8 +564,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         // check if touch gestures are enabled
         if (!mTouchEnabled)
             return false;
-        else
+        else {
             return mChartTouchListener.onTouch(this, event);
+        }
     }
 
     @Override
@@ -818,7 +823,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         float maxScale = getAxisRange(axis) / maxYRange;
         mViewPortHandler.setMinMaxScaleY(minScale, maxScale);
     }
-
 
     /**
      * Moves the left side of the current viewport to the specified x-position.
@@ -1224,7 +1228,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     /**
      * When enabled, the values will be clipped to contentRect,
-     *   otherwise they can bleed outside the content rect.
+     * otherwise they can bleed outside the content rect.
      *
      * @param enabled
      */
@@ -1234,7 +1238,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     /**
      * When enabled, the values will be clipped to contentRect,
-     *   otherwise they can bleed outside the content rect.
+     * otherwise they can bleed outside the content rect.
      *
      * @return
      */

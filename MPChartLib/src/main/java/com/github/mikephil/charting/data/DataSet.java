@@ -29,6 +29,12 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
      */
     protected float mYMin = Float.MAX_VALUE;
 
+    //ymax 时的x 坐标
+    protected float mYMaxXIndex = 0;
+
+    //ymin 时的x 坐标
+    protected float mYMinXIndex = 0;
+
     /**
      * maximum x-value in the value array
      */
@@ -119,11 +125,15 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
 
     protected void calcMinMaxY(T e) {
 
-        if (e.getY() < mYMin)
+        if (e.getY() < mYMin) {
             mYMin = e.getY();
+            mYMinXIndex = e.getX();
+        }
 
-        if (e.getY() > mYMax)
+        if (e.getY() > mYMax) {
             mYMax = e.getY();
+            mYMaxXIndex = e.getX();
+        }
     }
 
     @Override
@@ -189,6 +199,10 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
     public float getYMax() {
         return mYMax;
     }
+
+    public float getYMaxXIndex(){return mYMaxXIndex;}
+
+    public float getYMinXIndex(){return mYMinXIndex;}
 
     @Override
     public float getXMin() {
