@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -291,7 +292,7 @@ public class Chart2Activity extends AppCompatActivity {
             lineAverge.add(new Entry(i, (float) (qdData.Turnover / qdData.VolumeTotal / data.trade_unit)));
             lineOpenInterest.add(new Entry(i, qdData.OpenInterest));
             int color;
-            if (i == 0 || qdData.Volume >= data.data[i-1].Volume) {
+            if (i == 0 || qdData.Volume >= data.data[i - 1].Volume) {
                 color = Color.RED;
             } else {
                 color = Color.GREEN;
@@ -368,7 +369,7 @@ public class Chart2Activity extends AppCompatActivity {
         //图1 右y 坐标
         YAxis rightAxis = lineChart.getAxisRight();
         rightAxis.setLabelCount(5, true);
-        rightAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        rightAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         rightAxis.setAxisMaximum(diffRight);
         rightAxis.setAxisMinimum(-diffRight);
         rightAxis.setValueFormatter(rightYAxisValueFormatter);
@@ -383,7 +384,16 @@ public class Chart2Activity extends AppCompatActivity {
         //图2 右y 坐标
         YAxis rightAxis2 = combinedChart.getAxisRight();
         rightAxis2.setLabelCount(4, true);
-        rightAxis2.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        rightAxis2.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+
+        //add limit
+        float value = 54300;
+        LimitLine l = new LimitLine(value, "现货："+value);
+        l.setLineWidth(1f);
+        l.enableDashedLine(10f, 10f, 0f);
+        l.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_MID);
+        l.setTextSize(10f);
+        leftAxis.addLimitLine(l);
 
         //图1数据
         lineChart.setData(new LineData(setFenshi, setAverge));

@@ -19,6 +19,8 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
  */
 public abstract class AxisRenderer extends Renderer {
 
+    protected static float limitLabelPadding = Utils.convertDpToPixel(2f);
+
     /**
      * base axis this axis renderer works with
      */
@@ -49,6 +51,8 @@ public abstract class AxisRenderer extends Renderer {
      */
     protected Paint mLimitLinePaint;
 
+    protected Paint mLimitLineBgPaint;
+
     public AxisRenderer(ViewPortHandler viewPortHandler, Transformer trans, AxisBase axis) {
         super(viewPortHandler);
 
@@ -72,6 +76,9 @@ public abstract class AxisRenderer extends Renderer {
 
             mLimitLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mLimitLinePaint.setStyle(Paint.Style.STROKE);
+
+            mLimitLineBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mLimitLineBgPaint.setStyle(Paint.Style.FILL);
         }
     }
 
